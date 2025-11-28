@@ -10,6 +10,7 @@ const EntrarAventura = () => {
   const [tituloSessao, setTituloSessao] = useState("");
   const [codigo, setCodigo] = useState("");
   const [nome, setNome] = useState("");
+  const [isJoining, setIsJoining] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -47,12 +48,15 @@ const EntrarAventura = () => {
       <div className="btn-entrar-aventura-container">
         <button
           className="btn-entrar-aventura"
+          disabled={isJoining}
           onClick={async () => {
+            if (isJoining) return; // trava cliques múltiplos
             if (!nome || !codigo) {
               show("Informe seu nome e use o link com código.", { type: 'warning' });
               return;
             }
             try {
+              setIsJoining(true);
               const res = await fetch(
                 `${API_URL}/sessoes/by-code/${codigo}/alunos`,
                 {
@@ -64,6 +68,7 @@ const EntrarAventura = () => {
               const data = await res.json();
               if (!res.ok) {
                 show(data?.message || "Falha ao entrar na sessão", { type: 'error' });
+                setIsJoining(false);
                 return;
               }
               localStorage.setItem("sessao_codigo", codigo);
@@ -76,6 +81,7 @@ const EntrarAventura = () => {
               );
             } catch (err) {
               show("Erro ao entrar na sessão.", { type: 'error' });
+              setIsJoining(false);
             }
           }}
         >
