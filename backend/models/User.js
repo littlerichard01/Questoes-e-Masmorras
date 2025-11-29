@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     },
     avatar: { 
         type: String, 
-        default: '/avatars/Warrior.png' 
+        default: '/avatars/qemguerreiro.png' 
     },
 
     //Campos para recuperação de senha
